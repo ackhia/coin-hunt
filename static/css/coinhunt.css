@@ -1,0 +1,16 @@
+.top-buffer { 
+    margin-top:10px; 
+}
+
+.title {
+    margin-top: 25px;
+    margin-bottom: 20px;
+}
+
+h1, .h1 {
+    font-size: 2rem;
+}
+
+h4, .h4 {
+    font-size: 1.42rem;
+}

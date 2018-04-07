@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Jon's Shill Bot</title>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-111818205-1"></script>
+        <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-111818205-1');
+        </script>
+
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">      
+        <link rel="stylesheet" href="/css/cosmo.min.css">
+        <link rel="stylesheet" href="/css/coinhunt.css">
+  </head>
+  <body>
+    <div id="app" class="container">
+        <div class="row title">
+            <div class="col-sm text-center"><h1>Jon's Shill Bot</h1></div>
+        </div>
+        <div class="row col-sm">
+            <a data-toggle="collapse" href="#options" aria-expanded="false" aria-controls="options">
+                Options &gt;
+            </a>
+        </div>
+        <form>
+            <div class="row collapse" id="options">
+                    <div class="col-sm">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label class="col-form-label" for="timePeriod">Date for comparison</label>
+                        </div>
+                        <div class="col-sm-8 col-lg-3">
+                            <input id="date" class="form-control btn-secondry" type="date" min="2017-12-27" v-model="date" v-on:change="refreshCoins(app)">
+                        </div>
+
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-4"></div>
+                        <div class="col-sm">
+                            <span class="text-info">Note: I only have data from 27 Dec 2017.</span>
+                        </div>                        
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-4">
+                            <label class="col-form-label" for="supplyRatio">Min current rank</label>
+                        </div>
+                        <div class="col-sm-8 col-lg-3">
+                            <select class="form-control btn-secondry" id="minRank" v-model="minRank" v-on:change="refreshCoins(app)">
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                                <option value="200">200</option>
+                                <option value="300">300</option>
+                                <option value="500">500</option>
+                                <option value="700">700</option>
+                                <option value="1000">1000</option>
+                            </select>                        
+                        </div>
+
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-4">
+                            <label class="col-form-label" for="supplyRatio">Min available/total supply ratio</label>
+                        </div>
+                        <div class="col-sm-8 col-lg-3">
+                            <select class="form-control btn-secondry" id="minRank" v-model="minSupplyRatio" v-on:change="refreshCoins(app)">
+                                <option value="0">0</option>
+                                <option value="0.1">0.1</option>
+                                <option value="0.2">0.2</option>
+                                <option value="0.3">0.3</option>
+                                <option value="0.4">0.4</option>
+                                <option value="0.5">0.5</option>
+                                <option value="0.6">0.6</option>
+                                <option value="0.7">0.7</option>
+                                <option value="0.8">0.8</option>
+                                <option value="0.9">0.9</option>
+                                <option value="1">1</option>
+                            </select>                        
+                        </div>
+
+                    </div> 
+                        
+                    <div class="form-group row">
+                        <div class="col-sm-4">
+                            <label class="col-form-label" for="supplyRatio">Coin name or symbol</label>
+                        </div>
+                        <div class="col-sm-8 col-lg-3">
+                            <input class="form-control btn-secondry" id="nameSymbol" v-model="nameSymbol" />                       
+                        </div>
+                    </div>                          
+
+                    <div class="form-group row">
+                        <div class="col-sm-4">
+                            <label class="col-form-label" for="numResults">Number of results</label>
+                        </div>
+                        <div class="col-sm-8 col-lg-3">
+                            <select class="form-control btn-secondry" id="numResults" v-model="numResults" v-on:change="refreshCoins(app)">
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                                <option value="200">200</option>
+                                <option value="300">300</option>
+                                <option value="500">500</option>
+                                <option value="1000">1000</option>
+                            </select>                        
+                        </div>
+
+                    </div>
+                        
+                    <div class="form-group row">
+                        <div class="col-sm-4">
+                            <label class="col-form-label" for="numResults">Order by</label>
+                        </div>
+                        <div class="col-sm-8 col-lg-3">
+                            <select class="form-control btn-secondry" id="numResults" v-model="orderBy" v-on:change="refreshCoins(app)">                                
+                                <option value="Market Cap Change">Market Cap Change</option>
+                                <option value="Volume Change">Volume Change</option>
+                            </select>                        
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </form>
+        <br />
+        <div v-if="startDate != null">Comparing data from <span class="font-weight-bold font-italic">&quot;{{startDate}}&quot;</span> with <span class="font-weight-bold font-italic">&quot;{{endDate}}&quot;</span> ordered by <span class="font-weight-bold font-italic">&quot;{{orderBy}}&quot;</span></div>
+        <div class="row top-buffer">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Market Cap Change (Prior Rank <i class="fa fa-arrow-right" aria-hidden="true"></i> Current Rank)</th>
+                      <th>24h Volume (Change)</th>
+                      <th>Available/Total Supply Ratio</th>
+                      <th scope="col">Links</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr is="coin-row" v-for="coin in coins"
+                      v-bind:coin="coin"
+                      v-bind:key="coin.coin_market_cap_id"></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
+    <script src="/js/coinhunt.js"></script>
+  </body>
+</html>
